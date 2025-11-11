@@ -1,26 +1,28 @@
 import SwiftUI
 
 @Observable
-class CreatorsViewModel {
-    var creators: [Creator]
+class CreatorViewModel {
+    var creator: Creator
+    var blogPosts: [BlogPost]
 
-    var sortBy: String
-    var sortedCreators: [Creator] {
-        return creators.sorted { ($0.title) < ($1.title)  }
+    init(creator: Creator) {
+        self.creator = creator
+        self.blogPosts = [];
     }
 
-    init() {
-        self.creators = [];
-        self.sortBy = "name";
+    func fetchBlogPosts() async {
+        print("creator fetched")
 
-        var request = URLRequest(url: URL(string: "https://www.floatplane.com/api/v3/creator/list")!)
-        request.addValue("[COOKIE HERE]", forHTTPHeaderField: "Cookie")
+        var request = URLRequest(url: URL(string: "https://www.floatplane.com/api/v3/content/creator?id=\(creator.id)")!)
+        request.addValue("", forHTTPHeaderField: "Cookie")
         
         let session = URLSession.shared
         let task = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
             do {
+                let json = try JSONSerialization.jsonObject(with: data!) as! [Dictionary<String, AnyObject>]
+                print(json)
                 let decoder = JSONDecoder()
-                self.creators = try decoder.decode([Creator].self, from: data!)
+                self.blogPosts = try decoder.decode([BlogPost].self, from: data!)
             } catch {
                 print("error")
             }

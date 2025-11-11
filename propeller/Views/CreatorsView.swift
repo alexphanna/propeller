@@ -7,19 +7,15 @@ struct CreatorsView: View {
     var body: some View {
         NavigationStack {
             List(creatorsViewModel.sortedCreators) { creator in
-                Text(creator.title)
+                NavigationLink(creator.title, destination: CreatorView(creatorViewModel: CreatorViewModel(creator: creator)))
             }
-                .navigationTitle("Creators")
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Menu {
-                            Text("Sort by")
-                        } label: {
-                            Image(systemName: "ellipsis.circle")
-                        }
-                    }
-                }
+            .navigationTitle("Creators")
         }
         .searchable(text: $searchText)
+        .onAppear {
+            Task {
+                await creatorsViewModel.fetchCreators()
+            }
+        }
     }
 }

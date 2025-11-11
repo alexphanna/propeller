@@ -1,7 +1,4 @@
-class Creator : Codable, Identifiable {
+struct Creator : Codable, Identifiable {
+    var id: String
     var title: String
-    
-    init(title: String) {
-        self.title = title
-    }
 }
