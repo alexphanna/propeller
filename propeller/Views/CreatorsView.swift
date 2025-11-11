@@ -2,10 +2,13 @@ import SwiftUI
 
 struct CreatorsView: View {
     @State private var searchText: String = ""
+    @State private var creatorsViewModel = CreatorsViewModel()
 
     var body: some View {
         NavigationStack {
-            Text("Searching for \(searchText)")
+            List(creatorsViewModel.sortedCreators) { creator in
+                Text(creator.title)
+            }
                 .navigationTitle("Creators")
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
